@@ -44,23 +44,21 @@ var exptbl Export_Table
         fmt.Println(err)
     }
 
-    fmt.Println("Successfully Opened users.xml")
+    fmt.Println("Successfully Opened export.xml")
     // defer the closing of our xmlFile so that we can parse it later on
     defer xmlFile.Close()
     byteValue, _ := ioutil.ReadAll(xmlFile)
     xml.Unmarshal(byteValue, &exptbl)
 	
-//   fmt.Println(exptbl.Rows.Row[1])
-//    fmt.Println(exptbl)
-todaym := time.Now().Format("20060102")
-fname := "result"+todaym+".csv"
+	todaym := time.Now().Format("20060102")
+	fname := "result"+todaym+".csv"
 
-tmplt := "номер е-лікарняного;номер випадку непрацездатності;дата початку непрацездатності;дата закінчення непрацездатності;статус е-лікарняного;код причини непрацездатності;назва причини непрацезданості;перебування у стані сп’яніння;відмітка про порушення режиму; прізвище;ім’я;по батькові;код РНОКПП\n"
-tmplt, _ = encoder.String(tmplt)
-f, _ := os.Create(fname)
-f.Write([]byte(tmplt))
-f.Sync()
-defer f.Close()
+	tmplt := "номер е-лікарняного;номер випадку непрацездатності;дата початку непрацездатності;дата закінчення непрацездатності;статус е-лікарняного;код причини непрацездатності;назва причини непрацезданості;перебування у стані сп’яніння;відмітка про порушення режиму; прізвище;ім’я;по батькові;код РНОКПП\n"
+	tmplt, _ = encoder.String(tmplt)
+	f, _ := os.Create(fname)
+	f.Write([]byte(tmplt))
+	f.Sync()
+	defer f.Close()
 
 
 
@@ -73,7 +71,11 @@ defer f.Close()
 
 	case "P": 
 		tmplt = tmplt + "готовий до сплати"+";"
-        }
+	case "O":
+		tmplt = tmplt + "оплачений"+";"
+	default:
+		tmplt = tmplt + ";"
+        }	
 	tmplt = tmplt +r.WICCD+";"+r.WICCDName+";"+r.SIGNANLKNARKOTIKINTOXICATION+";"+r.VIOLATIONEXTENSION+";"+r.NPSURNAME+";"+r.NPNAME+";"+r.NPPATRONYMIC+";"+r.NPNUMIDENT+"\n"
 
 	tmplt, _ = encoder.String(tmplt)
